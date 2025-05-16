@@ -2,128 +2,58 @@ import array
 import os
 import json
 import time
-
 import ntptime
 from machine import Pin,PWM, UART
 from umodbus.serial import Serial as ModbusRTUMaster
-import rp2
+# import rp2
 import network
 from umqtt.simple import MQTTClient
 import network
 import socket
 import usocket
 import struct
-
 from secret import ssid, password
 import socket
 import gc
 
-led = Pin("LED", Pin.OUT)
-led.on()
-# time.sleep(15)
-led.off()
+from ota import OTAUpdater
 
+print("Hello this is version 2")
 
-
-id = ""
-for b in machine.unique_id():
-  id += "{:02X}".format(b)
-# id ='E6616408439B5233'
-print("id", id)
-# 
-# SUBSCRIBED_CHANNEL=b'id'+id+'/#'
-# SUBSCRIBED_CHANNEL1=b'id'+id+'/Switches'
-# SUBSCRIBED_CHANNEL2=b'id'+id+'/ModBusSend'
-# 
-# 
-# 
-# print("SUBS CHANNELS",SUBSCRIBED_CHANNEL)
-# print("SUBS CHANNELS1",SUBSCRIBED_CHANNEL1)
-# print("SUBS CHANNELS2",SUBSCRIBED_CHANNEL2)
-# CLIENT_ID = id
-# modbus_cmd_rcv=0
-# 
-# 
-# 
-# def get_ssl_params():
-#     """ Get ssl parameters for MQTT"""
-#     # These keys must be in der format the keys
-#     # downloaded from AWS website is in pem format
-#     keyfile = '/certs/private.der'
-#     with open(keyfile, 'rb') as f:
-#         key = f.read()
-#     certfile = "/certs/certificate.der"
-#     with open(certfile, 'rb') as f:
-#         cert = f.read()    
-#     ssl_params = {'key': key,'cert': cert, 'server_side': False}
-#     return ssl_params
-# 
-# def mqtt_callback(topic, msg):
-#     global flag
-#     """ Callback function for received messages"""
-#     print("received data:")
-#     topicd = topic.decode('utf-8')
-#     msgd = msg.decode('utf-8')
-#     print("topic: %s message: %s" %(topicd, msgd))
-#     log_msg("Message Received", format_time(now), id)
-#     
-#     modbus_cmd_rcv=0
-#     if topic==SUBSCRIBED_CHANNEL1:
-#         # on pico w in is connected to wireless chip so led code must adept to it
-#         response = msgd
-# #         send_disp_msg(response)
-#         ("P2", response)
-#         f = open('switches.txt', 'w')
-#         f.write(response)
-#         f.close()
-#     if topic==SUBSCRIBED_CHANNEL2:
-#         modbus_cmd_rcv=1
-#         # on pico w in is connected to wireless chip so led code must adept to it
-#         response = msgd
-# #         send_disp_msg(response)
-#         print("P2", response, "MCR", modbus_cmd_rcv)
-#         f = open('modbuscmd.txt', 'w')
-#         f.write(response)
-#         f.close()
-#     else: modbus_cmd_rcv=0
-#     print("about to return" ,modbus_cmd_rcv)
-#     return modbus_cmd_rcv
-#     
-#  
-# def connect():
-#     #Connect to WLAN
-#     wlan = network.WLAN(network.STA_IF)
-#     wlan.active(True)
-#     wlan.connect(ssid, password)
-#     while wlan.isconnected() == False:
-#         print('Waiting for connection...')
-#         print(ssid, password)
+def connect():
+    #Connect to WLAN
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(ssid, password)
+    while wlan.isconnected() == False:
+        print('Waiting for connection...')
+        print(ssid, password)
 #         led.on()
-#         time.sleep(6)
+        time.sleep(6)
 #         led.off()
-#     print(wlan.ifconfig())
-# try:
-#     logfull=1
-#     try:
-#         connect()
-#     except KeyboardInterrupt:
-#         machine.et()
-#         
-# 
-# #     log_msg("WifiConnected", format_time(now), id)    
-#     timenow=time.localtime()
-#     currstat=''
-#     print("Time 1", timenow)
-#     n=0
-#     while n==0:
-#         try: 
-#             ntptime.settime()
-#             n=1
-#         except:
-#             print("NTP Timed out, will retry")
-#             continue
-# 
-#         
+    print(wlan.ifconfig())
+try:
+    logfull=1
+    try:
+        connect()
+    except KeyboardInterrupt:
+        machine.et()
+        
+
+#     log_msg("WifiConnected", format_time(now), id)    
+    timenow=time.localtime()
+    currstat=''
+    print("Time 1", timenow)
+    n=0
+    while n==0:
+        try: 
+            ntptime.settime()
+            n=1
+        except:
+            print("NTP Timed out, will retry")
+            continue
+
+        
 #     now=time.localtime()
 #     print("Time 2", now)
 # 
@@ -637,26 +567,27 @@ print("id", id)
 #         formatnow=format_time(now)
 #         log_msg('All OK Outer Loop' + currstat + "/" + fileid, formatnow, id)
 # 
-# 
-# 
-# except Exception as e:
-#     print("Uncaught exception", e)
-#     now=time.localtime()
-#     print("Now",now)
-#     formatnow=format_time(now)
-#     print("Formatnow",formatnow)
-# #     log_msg(e,formatnow ,id)
-#     print("Logged")
-#     time.sleep(5)
-#     machine.reset()
-# #     
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+
+
+except Exception as e:
+    print("Uncaught exception", e)
+    now=time.localtime()
+    print("Now",now)
+    formatnow=format_time(now)
+    print("Formatnow",formatnow)
+#     log_msg(e,formatnow ,id)
+    print("Logged")
+    time.sleep(5)
+    machine.reset()
+#     
+
+
+
+
+
+
+
+
 
 
 
