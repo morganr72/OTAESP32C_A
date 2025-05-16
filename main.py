@@ -4,6 +4,7 @@ import json
 import time
 import ntptime
 from machine import Pin,PWM, UART
+import machine
 from umodbus.serial import Serial as ModbusRTUMaster
 # import rp2
 import network
@@ -18,7 +19,7 @@ import gc
 
 from ota import OTAUpdater
 
-print("Hello this is version 2")
+print("Hello this is version 4")
 
 def connect():
     #Connect to WLAN
@@ -52,6 +53,12 @@ try:
         except:
             print("NTP Timed out, will retry")
             continue
+
+    print("Time Done")
+    
+    firmware_url = "https://raw.githubusercontent.com/morganr72/OTAESP32C_A/"
+    ota_updater = OTAUpdater(ssid, password, firmware_url, "main.py")
+    ota_updater.download_and_install_update_if_available()
 
         
 #     now=time.localtime()
@@ -580,6 +587,7 @@ except Exception as e:
     time.sleep(5)
     machine.reset()
 #     
+
 
 
 
