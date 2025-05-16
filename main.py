@@ -578,14 +578,7 @@ try:
 
 except Exception as e:
     print("Uncaught exception", e)
-    now=time.localtime()
-    print("Now",now)
-    formatnow=format_time(now)
-    print("Formatnow",formatnow)
-#     log_msg(e,formatnow ,id)
-    print("Logged")
-    time.sleep(5)
-    machine.reset()
+
 #     
 
 
